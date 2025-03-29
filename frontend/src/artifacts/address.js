@@ -1,0 +1,1 @@
+export const supplyChainAddress = "0x544d9a23ba8E19671c75bf85e89208386841d5Fa";
