@@ -1,1 +1,1 @@
-export const supplyChainAddress = "0x544d9a23ba8E19671c75bf85e89208386841d5Fa";
+export const supplyChainAddress = "0x3811B7d710338362E7a9ff705C1E6150f053A655";

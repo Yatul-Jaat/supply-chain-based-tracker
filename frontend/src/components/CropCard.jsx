@@ -65,34 +65,46 @@ const CropCard = ({ crop }) => {
   };
 
   return (
-    <div className="crop-card border-2 rounded-xl p-4 my-4 flex flex-col gap-2 max-w-sm" >
-      <h3><span className='font-semibold'>Crop: </span> {crop.name}</h3>
-      <p><span className='font-semibold'>Description: </span>{crop.description}</p>
-      <p><span className='font-semibold'>Quantity: </span>{crop.quantity}</p>
-      <p><span className='font-semibold'>Price: </span>{web3.utils.fromWei(crop.price, 'ether')} ETH</p>
-      <p><span className='font-semibold'>Current Stage: </span>{currentStage}</p>
-      <div className='*:bg-gray-200 *:p-2 *:rounded-lg flex justify-center mt-4 *:hover:bg-gray-300 *:hover:cursor-pointer'> 
+    // <div className="crop-card border-2 rounded-xl p-4 my-4 flex flex-col gap-2 max-w-sm" >
+    //   <h3><span className='font-semibold'>Crop: </span> {crop.name}</h3>
+    //   <p><span className='font-semibold'>Description: </span>{crop.description}</p>
+    //   <p><span className='font-semibold'>Quantity: </span>{crop.quantity}</p>
+    //   <p><span className='font-semibold'>Price: </span>{web3.utils.fromWei(crop.price, 'ether')} ETH</p>
+    //   <p><span className='font-semibold'>Current Stage: </span>{currentStage}</p>
+    //   <div className='*:bg-gray-200 *:p-2 *:rounded-lg flex justify-center mt-4 *:hover:bg-gray-300 *:hover:cursor-pointer'> 
         
-        {/* Buttons to move the crop to different stages */}
-        {currentStage === 'Crop Initialized' && (
-          <button onClick={() => changeCropStage('Farming')}>Move to Farming</button>
+        
+    //   </div>
+
+    //   {error && <p style={{ color: 'red' }}>{error}</p>}
+    // </div>
+
+    <>
+    
+    <li><span className='font-semibold text-xl'>Crop: </span>{crop.name}</li>
+    <li><span className='font-semibold text-xl'>Description: </span>{crop.description}</li>
+    <li><span className='font-semibold text-xl'>Quantity: </span>{crop.quantity}</li>
+    <li><span className='font-semibold text-xl'>Price: </span>{web3.utils.fromWei(crop.price, 'ether')} ETH</li>
+    <li><span className='font-semibold text-xl'>Current Stage: </span>{currentStage}</li>
+    <li>
+    {currentStage === 'Crop Initialized' && (
+          <button className='bg-black text-white px-4 text-xl py-2 rounded-xl mt-3 cursor-pointer' onClick={() => changeCropStage('Farming')}>Move to Farming</button>
         )}
         {currentStage === 'Farming Stage' && (
-          <button onClick={() => changeCropStage('Processing')}>Move to Processing</button>
+          <button className='bg-black text-white px-4 text-xl py-2 rounded-xl mt-3 cursor-pointer' onClick={() => changeCropStage('Processing')}>Move to Processing</button>
         )}
         {currentStage === 'Processing Stage' && (
-          <button onClick={() => changeCropStage('Distribution')}>Move to Distribution</button>
+          <button className='bg-black text-white px-4 text-xl py-2 rounded-xl mt-3 cursor-pointer' onClick={() => changeCropStage('Distribution')}>Move to Distribution</button>
         )}
         {currentStage === 'Distribution Stage' && (
-          <button onClick={() => changeCropStage('Retail')}>Move to Retail</button>
+          <button className='bg-black text-white px-4 text-xl py-2 rounded-xl mt-3 cursor-pointer' onClick={() => changeCropStage('Retail')}>Move to Retail</button>
         )}
         {currentStage === 'Retail Stage' && (
-          <button onClick={() => changeCropStage('Sold')}>Move to Sold</button>
+          <button className='bg-black text-white px-4 text-xl py-2 rounded-xl mt-3 cursor-pointer' onClick={() => changeCropStage('Sold')}>Move to Sold</button>
         )}
-      </div>
-
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-    </div>
+    </li>
+    <li className='mt-5'>{error && <p style={{ color: 'red' }}>{error}</p>}</li>
+    </>
   );
 };
 

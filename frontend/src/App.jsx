@@ -1,52 +1,62 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import ConnectWallet from './components/ConnectWallet'
-import FarmerRegistration from './components/register/FarmerRegistration'
-import DistributorRegistration from './components/register/DistributorRegistration'
-import ProcessorRegistration from './components/register/ProcessorRegistered'
-import RetailerRegistration from './components/register/RetailerRegistered'
-import CropRegistration from './components/register/CropRegistration'
-import AllFarmers from './components/display/FarmerDisplay'
-import AllDistributors from './components/display/DistributorDisplay'
-import AllProcessors from './components/display/ProcessorDisplay'
-import AllRetailers from './components/display/RetailerDisplay'
-import AllCrops from './components/display/CropDisplay'
-import CropsInInitStage from './components/stage/InitStage'
-import FarmingCrops from './components/stage/FarmingStage'
-import ProcessingCrops from './components/stage/ProcessingStage'
-import DistributionCrops from './components/stage/DistributorStage'
-import SoldCrops from './components/stage/SoldStage'
-import RetailCrops from './components/stage/RetailStage'
-import CropCard from './components/CropCard'
-import CropList from './components/CropList'
+import { useState } from "react";
 
-import {Route, BrowserRouter as Router,  Routes} from 'react-router-dom'
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 
-import Home from './pages/Home'
-import Listedproduct from './components/Listedproduct'
-import Roles from './pages/Roles'
-import Inputdata from './pages/Inputdata'
+import Home from "./pages/Home";
+import Listedproduct from "./pages/Listedproduct";
+import Roles from "./pages/Roles";
+import Inputdata from "./pages/Inputdata";
+import Navbar from "./components/Navbar";
+import CropList from "./pages/CropList";
+import FarmingState from "./components/stage/FarmingStage";
+import ProcessingState from "./components/stage/ProcessingStage";
+import RetailState from "./components/stage/RetailStage";
+import DistributorState from "./components/stage/DistributorStage";
+import FarmerRegistration from "./components/register/FarmerRegistration";
+import ProcessorRegistration from "./components/register/ProcessorRegistered";
+import RetailerRegistration from "./components/register/RetailerRegistered";
+import DistributorRegistration from "./components/register/DistributorRegistration";
+import Rolechange from "./components/Rolechange";
+import Statechange from "./components/Statechange"
 
 
 
+function Layout(){
+  const[navColor,setNavColor]=useState("");
+  return(
+    <div className="h-full">
+      <Navbar navColor={navColor} setNavColor={setNavColor} />
+      <Routes>
+        <Route path="/" element={<Home setNavColor={setNavColor}  />} />
+        <Route path="listedproduct" element={<Listedproduct setNavColor={setNavColor} />}>
+          <Route index element={<Statechange/>}/>
+          <Route path="farming" element={<FarmingState />} />
+          <Route path="processing" element={<ProcessingState />} />
+          <Route path="distributing" element={<DistributorState />} />
+          <Route path="retailing" element={<RetailState />} />
+        </Route>
+        <Route path="roles" element={<Roles setNavColor={setNavColor} />}>
+        <Route index element={<Rolechange />} />
+        <Route path="farmer" element={<FarmerRegistration />} />
+        <Route path="processor" element={<ProcessorRegistration />} />
+        <Route path="distributor" element={<DistributorRegistration />} />
+        <Route path="retailer" element={<RetailerRegistration />} />
 
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <div >
-      <Router>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/listedproduct" element={<Listedproduct />} />
-          <Route path="/roles" element={<Roles />} />
-          <Route path="/form" element={<Inputdata />} />
-        </Routes>
-      </Router>
-
+        </Route>
+        <Route path="crops" element={<CropList setNavColor={setNavColor} />} />
+        <Route path="form" element={<Inputdata setNavColor={setNavColor} />} />
+      </Routes>
     </div>
   )
 }
 
-export default App
+function App() {
+  return (
+    <Router>
+    <Layout />
+  </Router>
+    
+  );
+}
+
+export default App;

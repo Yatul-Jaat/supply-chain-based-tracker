@@ -5,3 +5,7 @@ input:focus {
   outline: none;
   border: none;
 }
+
+body{
+  background-image: url(../public/bg.jpg);
+}

@@ -2,10 +2,10 @@ import React from 'react'
 import CropRegisteration from '../components/register/CropRegistration'
 import Navbar from '../components/Navbar'
 
-const Inputdata = () => {
+const Inputdata = ({setNavColor}) => {
+  setNavColor("form")
   return (
     <div>
-      <Navbar />
       <CropRegisteration /> 
     </div>
   )

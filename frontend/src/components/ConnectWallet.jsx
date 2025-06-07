@@ -99,12 +99,12 @@ const MetaMaskConnection = () => {
     <div >
       
       {!isConnected ? (
-        <button 
+        <div 
           onClick={connectWallet}
-          className="bg-black text-white px-3 py-2 rounded-md cursor-pointer hover:bg-white hover:text-black duration-300 border-2"
+          className="bg-black text-white px-3 py-2 w-full rounded-md cursor-pointer hover:bg-white hover:text-black duration-300 border-2 "
         >
           Connect Wallet
-        </button>
+        </div>
       ) : (
         <div className="bg-black text-white px-3 py-2 rounded-md cursor-pointer hover:bg-white hover:text-black duration-300 border-2">
           <p className="mb-2"><strong>Connected Account</strong></p>

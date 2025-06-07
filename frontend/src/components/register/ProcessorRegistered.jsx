@@ -1,95 +1,212 @@
-import React, { useState, useEffect } from 'react';
-import Web3 from 'web3';
-import { supplyChainAddress } from '../../artifacts/address'; // Import the contract address
-import contractABI from '../../artifacts/FarmerSupplyChain.json'; // Import the ABI from the JSON file
+// import React, { useState, useEffect } from 'react';
+// import Web3 from 'web3';
+// import { supplyChainAddress } from '../../artifacts/address'; // Import the contract address
+// import contractABI from '../../artifacts/FarmerSupplyChain.json'; // Import the ABI from the JSON file
+
+// const ProcessorRegistration = () => {
+//   const [name, setName] = useState('');
+//   const [location, setLocation] = useState('');
+//   const [account, setAccount] = useState(null);
+//   const [error, setError] = useState('');
+
+//   // Initialize web3 and contract
+//   const web3 = new Web3(window.ethereum);
+//   const contractAddress = supplyChainAddress; // Contract address imported
+//   const contract = new web3.eth.Contract(contractABI.abi, contractAddress); // Ensure ABI is imported correctly
+
+//   // Register processor function
+//   const handleRegisterProcessor = async () => {
+//     try {
+//       // Get the accounts from MetaMask
+//       const accounts = await web3.eth.getAccounts();
+//       if (accounts.length === 0) {
+//         setError('Please connect your wallet.');
+//         return;
+//       }
+
+//       setAccount(accounts[0]);
+
+//       // Call the registerProcessor method in the smart contract
+//       await contract.methods.registerProcessor(name, location).send({ from: accounts[0] });
+
+//       // Reset fields after successful registration
+//       setName('');
+//       setLocation('');
+//       alert('Processor registered successfully!');
+//     } catch (error) {
+//       console.error(error);
+//       setError('Error registering processor. Make sure the contract is deployed and connected.');
+//     }
+//   };
+
+//   // Handle account change (if the user switches accounts in MetaMask)
+//   useEffect(() => {
+//     const handleAccountChange = (accounts) => {
+//       if (accounts.length > 0) {
+//         setAccount(accounts[0]);
+//       } else {
+//         setAccount(null);
+//       }
+//     };
+
+//     // Listen for account changes in MetaMask
+//     window.ethereum.on('accountsChanged', handleAccountChange);
+
+//     // Cleanup listener on component unmount
+//     return () => {
+//       window.ethereum.removeListener('accountsChanged', handleAccountChange);
+//     };
+//   }, []);
+
+//   return (
+//     <div className='flex flex-col items-center  mt-5 gap-4 p-4'>
+//       <h2 className='text-2xl font-semibold'>Register as a Processor</h2>
+
+//       {/* Display the connected account */}
+//       {account && <p><strong>Connected Account:</strong> {account}</p>}
+
+//       {/* Input fields for processor details */}
+//       <div className='bg-gray-200 px-4 h-10 flex rounded-xl w-sm'>
+//         <input
+//           className='w-full'
+//           type="text"
+//           placeholder="Name"
+//           value={name}
+//           onChange={(e) => setName(e.target.value)}
+//         />
+//       </div>
+//       <div className='bg-gray-200 px-4 h-10 flex rounded-xl w-sm'>
+//         <input
+//         className='w-full'
+//           type="text"
+//           placeholder="Location"
+//           value={location}
+//           onChange={(e) => setLocation(e.target.value)}
+//         />
+//       </div>
+
+//       {/* Register button */}
+//       <button className='bg-black text-white px-4 text-xl rounded-xl mt-3' onClick={handleRegisterProcessor}>Register as Processor</button>
+
+//       {/* Display any error messages */}
+//       {error && <p style={{ color: 'red' }}>{error}</p>}
+//     </div>
+//   );
+// };
+
+// export default ProcessorRegistration;
+
+import { NavLink } from "react-router-dom";
+import { FaArrowLeft } from "react-icons/fa";
+import React, { useState, useEffect } from "react";
+import Web3 from "web3";
+import { supplyChainAddress } from "../../artifacts/address";
+import contractABI from "../../artifacts/FarmerSupplyChain.json";
 
 const ProcessorRegistration = () => {
-  const [name, setName] = useState('');
-  const [location, setLocation] = useState('');
+  const [name, setName] = useState("");
+  const [location, setLocation] = useState("");
   const [account, setAccount] = useState(null);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
+  const [web3, setWeb3] = useState(null);
+  const [contract, setContract] = useState(null);
 
-  // Initialize web3 and contract
-  const web3 = new Web3(window.ethereum);
-  const contractAddress = supplyChainAddress; // Contract address imported
-  const contract = new web3.eth.Contract(contractABI.abi, contractAddress); // Ensure ABI is imported correctly
-
-  // Register processor function
-  const handleRegisterProcessor = async () => {
-    try {
-      // Get the accounts from MetaMask
-      const accounts = await web3.eth.getAccounts();
-      if (accounts.length === 0) {
-        setError('Please connect your wallet.');
-        return;
-      }
-
-      setAccount(accounts[0]);
-
-      // Call the registerProcessor method in the smart contract
-      await contract.methods.registerProcessor(name, location).send({ from: accounts[0] });
-
-      // Reset fields after successful registration
-      setName('');
-      setLocation('');
-      alert('Processor registered successfully!');
-    } catch (error) {
-      console.error(error);
-      setError('Error registering processor. Make sure the contract is deployed and connected.');
+  useEffect(() => {
+    if (window.ethereum) {
+      const web3Instance = new Web3(window.ethereum);
+      setWeb3(web3Instance);
+      const contractInstance = new web3Instance.eth.Contract(
+        contractABI.abi,
+        supplyChainAddress
+      );
+      setContract(contractInstance);
+    } else {
+      setError("MetaMask is required to use this feature.");
     }
-  };
+  }, []);
 
-  // Handle account change (if the user switches accounts in MetaMask)
   useEffect(() => {
     const handleAccountChange = (accounts) => {
-      if (accounts.length > 0) {
-        setAccount(accounts[0]);
-      } else {
-        setAccount(null);
-      }
+      setAccount(accounts.length > 0 ? accounts[0] : null);
     };
-
-    // Listen for account changes in MetaMask
-    window.ethereum.on('accountsChanged', handleAccountChange);
-
-    // Cleanup listener on component unmount
+    if (window.ethereum) {
+      window.ethereum
+        .request({ method: "eth_accounts" })
+        .then(handleAccountChange);
+      window.ethereum.on("accountsChanged", handleAccountChange);
+    }
     return () => {
-      window.ethereum.removeListener('accountsChanged', handleAccountChange);
+      if (window.ethereum) {
+        window.ethereum.removeListener("accountsChanged", handleAccountChange);
+      }
     };
   }, []);
 
-  return (
-    <div className='flex flex-col items-center  mt-5 gap-4 p-4'>
-      <h2 className='text-2xl font-semibold'>Register as a Processor</h2>
-      
-      {/* Display the connected account */}
-      {account && <p><strong>Connected Account:</strong> {account}</p>}
+  const handleRegisterProcessor = async () => {
+    if (!web3 || !contract) {
+      setError("Web3 or contract instance not initialized.");
+      return;
+    }
+    try {
+      const accounts = await web3.eth.getAccounts();
+      if (!accounts.length) {
+        setError("Please connect your wallet.");
+        return;
+      }
+      await contract.methods
+        .registerProcessor(name, location)
+        .send({ from: accounts[0] });
+      setName("");
+      setLocation("");
+      alert("Processor registered successfully!");
+    } catch (err) {
+      console.error(err);
+      setError(
+        "Error registering processor. Ensure the contract is deployed and connected."
+      );
+    }
+  };
 
-      {/* Input fields for processor details */}
-      <div className='bg-gray-200 px-4 h-10 flex rounded-xl w-sm'>
+  return (
+    <div className="flex mt-30  justify-center flex-col items-center relative">
+      <NavLink
+        to="/roles"
+        className="uppercase bg-black text-white px-4 py-2 rounded-2xl absolute top-0 left-0 mx-30 hover:cursor-pointer hidden lg:flex justify-center items-center gap-2"
+      >
+        <FaArrowLeft className="text-sm" />
+        <p>back</p>
+      </NavLink>
+      <h2 className="text-3xl font-semibold">Register as a Processor</h2>
+      <div className="flex flex-col items-center mt-5 gap-4 p-4">
+        
+        {account && (
+          <p>
+            <strong>Connected Account:</strong> {account}
+          </p>
+        )}
         <input
-          className='w-full'
+          className="bg-gray-200 px-4 h-10 rounded-xl w-64"
           type="text"
           placeholder="Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
-      </div>
-      <div className='bg-gray-200 px-4 h-10 flex rounded-xl w-sm'>
         <input
-        className='w-full'
+          className="bg-gray-200 px-4 h-10 rounded-xl w-64"
           type="text"
           placeholder="Location"
           value={location}
           onChange={(e) => setLocation(e.target.value)}
         />
+        <button
+          className="bg-black text-white px-4 text-xl rounded-xl hover:cursor-pointer mt-3 py-2"
+          onClick={handleRegisterProcessor}
+        >
+          Register as Processor
+        </button>
+        
       </div>
-
-      {/* Register button */}
-      <button className='bg-black text-white px-4 text-xl rounded-xl mt-3' onClick={handleRegisterProcessor}>Register as Processor</button>
-
-      {/* Display any error messages */}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p className="text-red-500 mt-10">{error}</p>}
     </div>
   );
 };
